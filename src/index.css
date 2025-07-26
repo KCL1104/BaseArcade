@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;500;600;700&family=Pixelify+Sans:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1a103c;
+  --color-accent-fuchsia: #ff00ff;
+  --color-accent-cyan: #00ffff;
+  --color-accent-purple: #8b5cf6;
+  --color-accent-green: #00ff00;
+  --color-accent-orange: #ff8c00;
+  --color-accent-red: #ff0040;
+}
+
+@layer base {
+  * {
+    @apply border-0;
+  }
+  
+  body {
+    @apply bg-primary text-white antialiased;
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-gradient-to-r from-accent-fuchsia to-accent-purple text-white font-bold py-3 px-6 rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg;
+    font-family: 'Orbitron', monospace;
+    box-shadow: 0 4px 15px rgba(255, 0, 255, 0.3);
+  }
+  
+  .btn-secondary {
+    @apply border-2 border-accent-cyan text-accent-cyan font-bold py-3 px-6 rounded-lg transition-all duration-300 hover:bg-accent-cyan hover:text-primary hover:scale-105;
+    font-family: 'Orbitron', monospace;
+  }
+  
+  .neon-glow {
+    @apply shadow-lg transition-all duration-300;
+    box-shadow: 0 0 10px currentColor;
+  }
+  
+  .neon-glow:hover {
+    animation: glow 2s ease-in-out infinite alternate;
+    box-shadow: 0 0 20px currentColor, 0 0 30px currentColor;
+  }
+  
+  .game-card {
+    @apply bg-gradient-to-br from-purple-900/50 to-indigo-900/50 border border-accent-purple/30 rounded-xl p-6 transition-all duration-300 hover:border-accent-fuchsia hover:scale-105 cursor-pointer;
+  }
+  
+  .starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+  }
+  
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: starfield linear infinite;
+  }
+  
+  .font-heading {
+    font-family: 'Orbitron', monospace;
+  }
+  
+  .font-pixel {
+    font-family: 'Pixelify Sans', monospace;
+  }
+  
+  .font-body {
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .text-gradient {
+    @apply bg-gradient-to-r from-accent-fuchsia via-accent-purple to-accent-cyan bg-clip-text text-transparent;
+  }
+  
+  .border-gradient {
+    border-image: linear-gradient(45deg, #ff00ff, #8b5cf6, #00ffff) 1;
+  }
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 5px currentColor; }
+  100% { box-shadow: 0 0 20px currentColor, 0 0 30px currentColor; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes starfield {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-100vh); }
+}
