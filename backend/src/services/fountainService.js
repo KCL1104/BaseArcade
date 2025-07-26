@@ -6,8 +6,8 @@ const WebSocket = require('ws')
 class FountainService {
   constructor() {
     this.supabase = createClient(
-      process.env.SUPABASE_URL || 'https://nwlsvriplmcwiyzqrfyv.supabase.co',
-      process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im53bHN2cmlwbG1jd2l5enFyZnl2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMzMTUzNjAsImV4cCI6MjA2ODg5MTM2MH0.RXcLhxRhx7oT5O3Rlh_cKSEKiwErJ626l7gfTYkzOXY'
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY
     )
     this.provider = null
     this.contract = null
