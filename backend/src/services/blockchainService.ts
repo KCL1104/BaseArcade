@@ -102,7 +102,7 @@ export class BlockchainService {
 
           // Update and broadcast game stats
           const stats = await this.databaseService.getGameStats();
-          this.socketService.broadcastStatsUpdate(stats as any);
+          this.socketService.broadcastStatsUpdate(stats as unknown as Record<string, unknown>);
 
         } catch (error) {
           logger.error('Error processing PixelChanged event:', error);
@@ -119,13 +119,15 @@ export class BlockchainService {
       if (this.provider instanceof WebSocketProvider) {
         const wsProvider = this.provider as WebSocketProvider;
         if (wsProvider.websocket) {
-          (wsProvider.websocket as any).on('close', (code: number, reason: string) => {
+          (wsProvider.websocket as unknown as { on: (event: string, callback: (...args: any[]) => void) => void }).on('close', (...args: any[]) => {
+            const [code, reason] = args as [number, string];
             logger.warn(`WebSocket connection closed: ${code} - ${reason}`);
             this.isListening = false;
             this.reconnect();
           });
 
-          (wsProvider.websocket as any).on('error', (error: Error) => {
+          (wsProvider.websocket as unknown as { on: (event: string, callback: (...args: any[]) => void) => void }).on('error', (...args: any[]) => {
+            const [error] = args as [Error];
             logger.error('WebSocket error:', error);
             this.handleProviderError(error);
           });

@@ -2,9 +2,9 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node app.js",
     "dev": "nodemon",
     "build": "tsc",
     "clean": "rimraf dist",
@@ -12,11 +12,16 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "test:integration": "jest --testPathPattern=integration",
-    "check": "tsc --noEmit && npm run test"
+    "check": "tsc --noEmit && npm run test",
+    "docker:build": "docker build -t base-arcade-backend .",
+    "docker:run": "docker run -p 8080:8080 --env-file .env base-arcade-backend",
+    "gcp:deploy": "gcloud run deploy base-arcade-backend --source . --region us-central1 --allow-unauthenticated",
+    "gcp:logs": "gcloud logs tail \"resource.type=cloud_run_revision AND resource.labels.service_name=base-arcade-backend\""
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+
+  "author": "CamelSean",
+  "license": "Apache-2.0",
   "type": "commonjs",
   "dependencies": {
     "@supabase/supabase-js": "^2.52.1",

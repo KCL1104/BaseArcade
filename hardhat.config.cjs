@@ -1,5 +1,5 @@
 require("@nomicfoundation/hardhat-toolbox");
-require("dotenv").config({ path: ".env.local" });
+require("dotenv").config({ path: ".env" });
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -14,8 +14,8 @@ module.exports = {
   },
   networks: {
     baseSepolia: {
-      url: process.env.VITE_BASE_SEPOLIA_RPC_URL,
-      accounts: [process.env.VITE_WALLET_PRIVATE_KEY],
+      url: process.env.VITE_BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org",
+      accounts: process.env.VITE_WALLET_PRIVATE_KEY ? [process.env.VITE_WALLET_PRIVATE_KEY] : ["0x0000000000000000000000000000000000000000000000000000000000000001"],
       chainId: 84532,
     },
   },

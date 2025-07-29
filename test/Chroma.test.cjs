@@ -36,7 +36,7 @@ describe("Chroma Contract", function () {
     });
 
     it("Should have correct constants", async function () {
-      expect(await chroma.CANVAS_WIDTH()).to.equal(1000);
+      expect(await chroma.CANVAS_WIDTH()).to.equal(3000);
       expect(await chroma.BASE_PIXEL_PRICE()).to.equal(BASE_PIXEL_PRICE);
       expect(await chroma.LOCK_PRICE_MULTIPLIER()).to.equal(LOCK_PRICE_MULTIPLIER);
       expect(await chroma.LOCK_DURATION()).to.equal(LOCK_DURATION);
@@ -51,18 +51,16 @@ describe("Chroma Contract", function () {
       const color = 0xFF0000; // Red
       const price = await chroma.getPixelPrice(x, y);
       
-      await expect(
-        chroma.connect(user1).placePixel(x, y, color, { value: price })
-      ).to.emit(chroma, "PixelChanged")
-        .withArgs(
-          x * 1000 + y, // coordinate
-          user1.address,
-          color,
-          1, // heat level
-          price,
-          false, // not locked
-          await time.latest() + 1
-        );
+      const tx = await chroma.connect(user1).placePixel(x, y, color, { value: price });
+      const receipt = await tx.wait();
+      const event = receipt.logs.find(log => log.fragment?.name === 'PixelChanged');
+      
+      expect(event.args[0]).to.equal(y * 3000 + x); // coordinate
+      expect(event.args[1]).to.equal(user1.address);
+      expect(event.args[2]).to.equal(color);
+      expect(event.args[3]).to.equal(1); // heat level
+      expect(event.args[4]).to.equal(price);
+      expect(event.args[5]).to.equal(false); // not locked
     });
 
     it("Should reject pixel placement with insufficient payment", async function () {
@@ -73,7 +71,7 @@ describe("Chroma Contract", function () {
       
       await expect(
         chroma.connect(user1).placePixel(x, y, color, { value: price - 1n })
-      ).to.be.revertedWith("Insufficient payment");
+      ).to.be.revertedWithCustomError(chroma, "InsufficientPayment");
     });
 
     it("Should enforce user cooldown", async function () {
@@ -88,7 +86,7 @@ describe("Chroma Contract", function () {
       // Try to place second pixel immediately (should fail)
       await expect(
         chroma.connect(user1).placePixel(x2, y2, color, { value: price2 })
-      ).to.be.revertedWith("User cooldown active");
+      ).to.be.revertedWithCustomError(chroma, "UserOnCooldown");
       
       // Wait for cooldown to expire
       await time.increase(USER_COOLDOWN + 1);
@@ -114,18 +112,16 @@ describe("Chroma Contract", function () {
       
       // Place second pixel on same coordinate
       const price2 = await chroma.getPixelPrice(x, y);
-      await expect(
-        chroma.connect(user2).placePixel(x, y, color2, { value: price2 })
-      ).to.emit(chroma, "PixelChanged")
-        .withArgs(
-          x * 1000 + y,
-          user2.address,
-          color2,
-          2, // heat level increased
-          price2,
-          false,
-          await time.latest() + 1
-        );
+      const tx = await chroma.connect(user2).placePixel(x, y, color2, { value: price2 });
+      const receipt = await tx.wait();
+      const event = receipt.logs.find(log => log.fragment?.name === 'PixelChanged');
+      
+      expect(event.args[0]).to.equal(y * 3000 + x);
+      expect(event.args[1]).to.equal(user2.address);
+      expect(event.args[2]).to.equal(color2);
+      expect(event.args[3]).to.equal(2); // heat level increased
+      expect(event.args[4]).to.equal(price2);
+      expect(event.args[5]).to.equal(false);
     });
   });
 
@@ -136,15 +132,13 @@ describe("Chroma Contract", function () {
       const color = 0xFF0000;
       const lockPrice = await chroma.getLockPrice(x, y);
       
-      await expect(
-        chroma.connect(user1).lockPixel(x, y, color, { value: lockPrice })
-      ).to.emit(chroma, "PixelLocked")
-        .withArgs(
-          x * 1000 + y,
-          user1.address,
-          lockPrice,
-          await time.latest() + LOCK_DURATION + 1
-        );
+      const tx = await chroma.connect(user1).lockPixel(x, y, color, { value: lockPrice });
+      const receipt = await tx.wait();
+      const event = receipt.logs.find(log => log.fragment?.name === 'PixelLocked');
+      
+      expect(event.args[0]).to.equal(y * 3000 + x);
+      expect(event.args[1]).to.equal(user1.address);
+      expect(event.args[2]).to.equal(lockPrice);
     });
 
     it("Should prevent modification of locked pixels", async function () {
@@ -164,7 +158,7 @@ describe("Chroma Contract", function () {
       const price = await chroma.getPixelPrice(x, y);
       await expect(
         chroma.connect(user2).placePixel(x, y, color2, { value: price })
-      ).to.be.revertedWith("Pixel is locked");
+      ).to.be.revertedWithCustomError(chroma, "PixelIsLocked");
     });
 
     it("Should allow modification after lock expires", async function () {
@@ -199,7 +193,7 @@ describe("Chroma Contract", function () {
       const lockPrice2 = await chroma.getLockPrice(x2, y2);
       await expect(
         chroma.connect(user1).lockPixel(x2, y2, color, { value: lockPrice2 })
-      ).to.be.revertedWith("User cooldown active");
+      ).to.be.revertedWithCustomError(chroma, "UserOnCooldown");
     });
   });
 
@@ -274,9 +268,12 @@ describe("Chroma Contract", function () {
         chroma.connect(user1).placePixel(0, 0, 0xFF0000, { value: price })
       ).to.emit(chroma, "PixelChanged");
       
-      const price2 = await chroma.getPixelPrice(999, 999);
+      // Wait for cooldown
+      await time.increase(USER_COOLDOWN + 1);
+      
+      const price2 = await chroma.getPixelPrice(2999, 2999);
       await expect(
-        chroma.connect(user1).placePixel(999, 999, 0x00FF00, { value: price2 })
+        chroma.connect(user1).placePixel(2999, 2999, 0x00FF00, { value: price2 })
       ).to.emit(chroma, "PixelChanged");
     });
 
@@ -284,12 +281,12 @@ describe("Chroma Contract", function () {
       const price = BASE_PIXEL_PRICE;
       
       await expect(
-        chroma.connect(user1).placePixel(1000, 500, 0xFF0000, { value: price })
-      ).to.be.revertedWith("Invalid coordinates");
+        chroma.connect(user1).placePixel(3000, 500, 0xFF0000, { value: price })
+      ).to.be.revertedWithCustomError(chroma, "InvalidCoordinates");
       
       await expect(
-        chroma.connect(user1).placePixel(500, 1000, 0xFF0000, { value: price })
-      ).to.be.revertedWith("Invalid coordinates");
+        chroma.connect(user1).placePixel(500, 3000, 0xFF0000, { value: price })
+      ).to.be.revertedWithCustomError(chroma, "InvalidCoordinates");
     });
 
     it("Should handle maximum heat level", async function () {

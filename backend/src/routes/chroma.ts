@@ -238,7 +238,6 @@ router.get('/users/:address/stats',
   handleValidationErrors,
   asyncHandler(async (req: express.Request, res: express.Response) => {
     const address = req.params.address;
-    const gameType = req.query.gameType as string || 'chroma';
     
     const stats = await getChromaService().getUserStats(address);
     res.json({

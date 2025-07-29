@@ -259,7 +259,7 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
   
   // Override res.end to log response
   const originalEnd = res.end.bind(res);
-  (res as any).end = function(chunk?: any, encoding?: BufferEncoding, cb?: () => void) {
+  (res as unknown as { end: (chunk?: unknown, encoding?: BufferEncoding, cb?: () => void) => void }).end = function(chunk?: unknown, encoding?: BufferEncoding, cb?: () => void) {
     const duration = Date.now() - start;
     
     logger.info({
@@ -277,12 +277,12 @@ export const requestLogger = (req: Request, res: Response, next: NextFunction): 
       return originalEnd(chunk);
     } else if (arguments.length === 2) {
       if (typeof encoding === 'function') {
-        return originalEnd(chunk, encoding as any);
+        return originalEnd(chunk, encoding as unknown as BufferEncoding);
       } else {
-        return originalEnd(chunk, encoding as any);
+        return originalEnd(chunk, encoding as BufferEncoding);
       }
     } else {
-      return originalEnd(chunk, encoding as any, cb);
+      return originalEnd(chunk, encoding as BufferEncoding, cb);
     }
   };
   

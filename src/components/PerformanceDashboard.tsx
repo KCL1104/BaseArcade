@@ -49,7 +49,7 @@ export const PerformanceDashboard: React.FC = () => {
     updateStats() // Initial update
 
     return () => clearInterval(interval)
-  }, [])
+  }, [getReport])
 
   const getPerformanceColor = (value: number, thresholds: { good: number; warning: number }) => {
     if (value >= thresholds.good) return 'text-green-400'
