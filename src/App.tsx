@@ -6,10 +6,7 @@ import { Toaster } from 'sonner'
 import { Suspense, lazy } from 'react'
 import { config } from './lib/wagmi'
 import { PlatformShell } from './components/PlatformShell'
-import { StarfieldBackground } from './components/StarfieldBackground'
 import ErrorBoundary from './components/ErrorBoundary'
-import { WalletNotifications } from './components/WalletNotifications'
-import PerformanceDashboard from './components/PerformanceDashboard'
 import '@rainbow-me/rainbowkit/styles.css'
 
 // Lazy load page components for code splitting
@@ -32,10 +29,10 @@ function App() {
       <WagmiProvider config={config}>
         <QueryClientProvider client={queryClient}>
           <RainbowKitProvider>
-            <WalletNotifications />
+            {/* <WalletNotifications /> */}
             <Router>
               <div className="min-h-screen bg-primary text-white relative overflow-hidden">
-                <StarfieldBackground />
+                {/* <StarfieldBackground /> */}
                 <PlatformShell>
                   <Suspense fallback={<PageLoader />}>
                     <Routes>
@@ -45,7 +42,7 @@ function App() {
                     </Routes>
                   </Suspense>
                 </PlatformShell>
-                <PerformanceDashboard />
+                {/* <PerformanceDashboard /> */}
                 <Toaster 
                   theme="dark" 
                   position="top-right"

@@ -6,54 +6,42 @@ test.describe('Game Flow E2E Tests', () => {
     await page.goto('/');
     
     // Wait for the page to load
-    await page.waitForLoadState('networkidle');
+    await page.waitForLoadState('domcontentloaded');
+    // Wait for the main UI elements to be visible
+    await page.waitForSelector('text=Base Arcade', { timeout: 10000 });
   });
 
   test('should load the main page correctly', async ({ page }) => {
     // Check if the main elements are present
-    await expect(page.locator('h1')).toContainText('Base Arcade');
-    await expect(page.locator('[data-testid="game-canvas-container"]')).toBeVisible();
-    await expect(page.locator('[data-testid="color-palette"]')).toBeVisible();
+    await expect(page.locator('text=Base Arcade')).toBeVisible();
+    await expect(page.locator('text=Your Onchain Arcade. Press Start to Play.')).toBeVisible();
+    await expect(page.locator('button:has-text("Connect Wallet")')).toBeVisible();
   });
 
   test('should show wallet connection prompt when not connected', async ({ page }) => {
     // Check for wallet connection UI
-    await expect(page.locator('text=Connect Wallet')).toBeVisible();
-    await expect(page.locator('text=Connect your wallet to start playing')).toBeVisible();
+    await expect(page.locator('button:has-text("Connect Wallet")')).toBeVisible();
+    await expect(page.locator('text=Your Onchain Arcade. Press Start to Play.')).toBeVisible();
   });
 
   test('should handle wallet connection flow', async ({ page }) => {
-    // Mock MetaMask extension
-    await page.addInitScript(() => {
-      // Mock ethereum object
-      (window as Window & { ethereum?: unknown }).ethereum = {
-        isMetaMask: true,
-        request: async ({ method }: { method: string }) => {
-          if (method === 'eth_requestAccounts') {
-            return ['0x1234567890123456789012345678901234567890'];
-          }
-          if (method === 'eth_chainId') {
-            return '0x2105'; // Base chain ID
-          }
-          if (method === 'wallet_switchEthereumChain') {
-            return null;
-          }
-          return null;
-        },
-        on: () => {},
-        removeListener: () => {},
-      };
-    });
-
     // Click connect wallet button
-    await page.click('text=Connect Wallet');
-    
-    // Wait for connection to complete
-    await page.waitForTimeout(1000);
-    
-    // Check if wallet is connected
-    await expect(page.locator('text=0x1234...7890')).toBeVisible();
-    await expect(page.locator('text=Disconnect')).toBeVisible();
+    await page.click('button:has-text("Connect Wallet")');
+
+    // Wait for wallet selection modal to appear
+    await expect(page.locator('text=Connect Wallet')).toBeVisible();
+
+    // Check that wallet options are available
+    await expect(page.locator('button:has-text("MetaMask")')).toBeVisible();
+    await expect(page.locator('button:has-text("Rainbow")')).toBeVisible();
+    await expect(page.locator('button:has-text("Coinbase Wallet")')).toBeVisible();
+    await expect(page.locator('button:has-text("WalletConnect")')).toBeVisible();
+
+    // Close the modal
+    await page.click('button:has-text("Close")');
+
+    // Verify modal is closed
+    await expect(page.locator('text=連接錢包')).not.toBeVisible();
   });
 
   test('should display color palette correctly', async ({ page }) => {

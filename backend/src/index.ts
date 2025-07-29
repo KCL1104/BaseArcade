@@ -81,7 +81,7 @@ const initializeServices = async () => {
         json: () => {}
       } as unknown as express.Response;
       
-      wsConnectionLimiter(req, res, (err?: any) => {
+      wsConnectionLimiter(req, res, (err?: Error) => {
         if (err) {
           logger.warn(`WebSocket connection rejected due to rate limiting: ${socket.id}`);
           return next(new Error('Rate limit exceeded'));

@@ -119,14 +119,14 @@ export class BlockchainService {
       if (this.provider instanceof WebSocketProvider) {
         const wsProvider = this.provider as WebSocketProvider;
         if (wsProvider.websocket) {
-          (wsProvider.websocket as unknown as { on: (event: string, callback: (...args: any[]) => void) => void }).on('close', (...args: any[]) => {
+          (wsProvider.websocket as unknown as { on: (event: string, callback: (...args: unknown[]) => void) => void }).on('close', (...args: unknown[]) => {
             const [code, reason] = args as [number, string];
             logger.warn(`WebSocket connection closed: ${code} - ${reason}`);
             this.isListening = false;
             this.reconnect();
           });
 
-          (wsProvider.websocket as unknown as { on: (event: string, callback: (...args: any[]) => void) => void }).on('error', (...args: any[]) => {
+          (wsProvider.websocket as unknown as { on: (event: string, callback: (...args: unknown[]) => void) => void }).on('error', (...args: unknown[]) => {
             const [error] = args as [Error];
             logger.error('WebSocket error:', error);
             this.handleProviderError(error);

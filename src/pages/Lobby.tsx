@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { GameCard } from '../components/GameCard'
 import { useGameRegistry } from '../hooks/useGameRegistry'
 import { Gamepad2, Users, Activity, TrendingUp } from 'lucide-react'
@@ -7,7 +7,7 @@ import { analyticsService } from '../services/analyticsService'
 
 export function Lobby() {
   const { games, isLoading, getTotalStats } = useGameRegistry()
-  const totalStats = getTotalStats()
+  const totalStats = useMemo(() => getTotalStats(), [getTotalStats])
   
   // Track page view
   useEffect(() => {

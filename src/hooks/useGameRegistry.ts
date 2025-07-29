@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback, useMemo } from 'react'
 import type { Game } from '../types/game'
 
 // Enhanced game data with real-time statistics integration
 const getGameStats = async (gameId: string) => {
   try {
     if (gameId === 'chroma') {
-      const response = await fetch('http://localhost:3001/api/game-stats')
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3001'}/api/game-stats`)
       if (response.ok) {
         const data = await response.json()
         return {
@@ -138,15 +138,15 @@ export function useGameRegistry() {
     return () => clearInterval(interval)
   }, [])
 
-  const getGameById = (id: string) => {
+  const getGameById = useCallback((id: string) => {
     return games.find(game => game.id === id)
-  }
+  }, [games])
 
-  const getActiveGames = () => {
+  const getActiveGames = useCallback(() => {
     return games.filter(game => game.status === 'active')
-  }
+  }, [games])
 
-  const getTotalStats = () => {
+  const getTotalStats = useCallback(() => {
     return games.reduce(
       (totals, game) => ({
         totalPlayers: totals.totalPlayers + (game.stats?.totalPlayers || 0),
@@ -155,14 +155,14 @@ export function useGameRegistry() {
       }),
       { totalPlayers: 0, totalTransactions: 0, activePlayers: 0 }
     )
-  }
+  }, [games])
 
-  return {
+  return useMemo(() => ({
     games,
     isLoading,
     error,
     getGameById,
     getActiveGames,
     getTotalStats
-  }
+  }), [games, isLoading, error, getGameById, getActiveGames, getTotalStats])
 }

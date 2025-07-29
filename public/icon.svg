@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#16213e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#0f3460;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="arcadeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#ec4899;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1" />
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge> 
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGradient)" stroke="url(#arcadeGradient)" stroke-width="8"/>
+  
+  <!-- Arcade machine body -->
+  <rect x="180" y="180" width="152" height="200" rx="12" fill="#2d3748" stroke="url(#arcadeGradient)" stroke-width="3"/>
+  
+  <!-- Screen -->
+  <rect x="200" y="200" width="112" height="84" rx="8" fill="#000" stroke="#a855f7" stroke-width="2"/>
+  <rect x="208" y="208" width="96" height="68" rx="4" fill="#1a202c"/>
+  
+  <!-- Pixel art on screen -->
+  <rect x="220" y="220" width="8" height="8" fill="#a855f7"/>
+  <rect x="236" y="220" width="8" height="8" fill="#ec4899"/>
+  <rect x="252" y="220" width="8" height="8" fill="#06b6d4"/>
+  <rect x="268" y="220" width="8" height="8" fill="#10b981"/>
+  <rect x="284" y="220" width="8" height="8" fill="#f59e0b"/>
+  
+  <rect x="228" y="236" width="8" height="8" fill="#ec4899"/>
+  <rect x="244" y="236" width="8" height="8" fill="#06b6d4"/>
+  <rect x="260" y="236" width="8" height="8" fill="#10b981"/>
+  <rect x="276" y="236" width="8" height="8" fill="#f59e0b"/>
+  
+  <rect x="220" y="252" width="8" height="8" fill="#06b6d4"/>
+  <rect x="236" y="252" width="8" height="8" fill="#10b981"/>
+  <rect x="252" y="252" width="8" height="8" fill="#f59e0b"/>
+  <rect x="268" y="252" width="8" height="8" fill="#a855f7"/>
+  <rect x="284" y="252" width="8" height="8" fill="#ec4899"/>
+  
+  <!-- Control panel -->
+  <rect x="190" y="300" width="132" height="60" rx="8" fill="#4a5568" stroke="url(#arcadeGradient)" stroke-width="2"/>
+  
+  <!-- Joystick -->
+  <circle cx="220" cy="330" r="12" fill="#2d3748" stroke="#a855f7" stroke-width="2"/>
+  <circle cx="220" cy="330" r="6" fill="url(#arcadeGradient)"/>
+  
+  <!-- Action buttons -->
+  <circle cx="270" cy="320" r="8" fill="#ec4899" filter="url(#glow)"/>
+  <circle cx="290" cy="325" r="8" fill="#06b6d4" filter="url(#glow)"/>
+  <circle cx="270" cy="340" r="8" fill="#10b981" filter="url(#glow)"/>
+  <circle cx="290" cy="345" r="8" fill="#f59e0b" filter="url(#glow)"/>
+  
+  <!-- Coin slot -->
+  <rect x="240" y="370" width="32" height="4" rx="2" fill="#1a202c" stroke="#a855f7" stroke-width="1"/>
+  
+  <!-- Neon glow effects -->
+  <circle cx="256" cy="256" r="235" fill="none" stroke="url(#arcadeGradient)" stroke-width="2" opacity="0.6" filter="url(#glow)"/>
+  
+  <!-- Title text -->
+  <text x="256" y="450" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="url(#arcadeGradient)" filter="url(#glow)">BASE</text>
+  <text x="256" y="475" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="url(#arcadeGradient)" filter="url(#glow)">ARCADE</text>
+</svg>

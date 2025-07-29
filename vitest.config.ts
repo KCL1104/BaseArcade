@@ -1,9 +1,10 @@
 import { defineConfig } from 'vitest/config'
 import react from '@vitejs/plugin-react-swc'
 import path from 'path'
+import type { Plugin } from 'vite'
 
 export default defineConfig({
-  plugins: [react() as any],
+  plugins: [react() as Plugin],
   test: {
     globals: true,
     environment: 'jsdom',

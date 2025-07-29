@@ -359,27 +359,31 @@ export class PerformanceService {
 export const performanceService = new PerformanceService()
 
 // Performance monitoring hooks for React components
+import { useMemo } from 'react'
+
 export const usePerformanceMonitoring = () => {
-  const measureRender = <T>(name: string, renderFunction: () => T) => {
-    return performanceService.measureRender(name, renderFunction)
-  }
+  return useMemo(() => {
+    const measureRender = <T>(name: string, renderFunction: () => T) => {
+      return performanceService.measureRender(name, renderFunction)
+    }
 
-  const measureAsync = async <T>(name: string, asyncFunction: () => Promise<T>) => {
-    return performanceService.measureAsync(name, asyncFunction)
-  }
+    const measureAsync = async <T>(name: string, asyncFunction: () => Promise<T>) => {
+      return performanceService.measureAsync(name, asyncFunction)
+    }
 
-  const startInteraction = (name: string) => {
-    const startTime = performance.now()
-    return () => performanceService.measureUserInteraction(name, startTime)
-  }
+    const startInteraction = (name: string) => {
+      const startTime = performance.now()
+      return () => performanceService.measureUserInteraction(name, startTime)
+    }
 
-  return {
-    measureRender,
-    measureAsync,
-    startInteraction,
-    getReport: () => performanceService.getPerformanceReport(),
-    exportData: () => performanceService.exportPerformanceData()
-  }
+    return {
+      measureRender,
+      measureAsync,
+      startInteraction,
+      getReport: () => performanceService.getPerformanceReport(),
+      exportData: () => performanceService.exportPerformanceData()
+    }
+  }, [])
 }
 
 export default performanceService

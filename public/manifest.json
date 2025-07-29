@@ -1,0 +1,27 @@
+{
+  "name": "Base Arcade - Onchain Gaming Platform",
+  "short_name": "Base Arcade",
+  "description": "Onchain gaming platform featuring Chroma pixel art and The Fountain games on Base network",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1a2e",
+  "theme_color": "#a855f7",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icon-192.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "entertainment", "blockchain"],
+  "lang": "en",
+  "dir": "ltr"
+}

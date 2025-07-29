@@ -195,7 +195,7 @@ router.get('/chroma-fees',
       return;
     }
     
-    const chromaFees = await getFountainService().getChromaFees(roundId as any, limit, offset);
+    const chromaFees = await getFountainService().getChromaFees(roundId as number, limit, offset);
     res.json({
       success: true,
       data: chromaFees,

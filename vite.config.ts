@@ -14,34 +14,11 @@ export default defineConfig({
     // Code splitting optimization
     rollupOptions: {
       output: {
-        manualChunks: (id) => {
-          // Vendor chunks for better caching
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'react-vendor'
-            }
-            if (id.includes('framer-motion')) {
-              return 'animation-vendor'
-            }
-            if (id.includes('wagmi') || id.includes('rainbow') || id.includes('viem')) {
-              return 'web3-vendor'
-            }
-            if (id.includes('lucide-react')) {
-              return 'icons-vendor'
-            }
-            return 'vendor'
-          }
-          
-          // Component chunks
-          if (id.includes('/components/')) {
-            return 'components'
-          }
-          if (id.includes('/pages/')) {
-            return 'pages'
-          }
-          if (id.includes('/services/')) {
-            return 'services'
-          }
+        manualChunks: {
+          // Keep only essential vendor chunks to avoid circular dependencies
+          'react-vendor': ['react', 'react-dom'],
+          'web3-vendor': ['wagmi', 'viem', '@rainbow-me/rainbowkit'],
+          'socket-vendor': ['socket.io-client']
         },
         // Optimize chunk file names for better caching
         chunkFileNames: () => {
@@ -77,7 +54,10 @@ export default defineConfig({
       'viem',
       '@rainbow-me/rainbowkit',
       'zustand',
-      '@tanstack/react-query'
+      '@tanstack/react-query',
+      'socket.io-client',
+      'sonner',
+      'canvas-confetti'
     ]
   }
 })
