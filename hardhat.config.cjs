@@ -15,7 +15,7 @@ module.exports = {
   networks: {
     baseSepolia: {
       url: process.env.VITE_BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org",
-      accounts: process.env.VITE_WALLET_PRIVATE_KEY ? [process.env.VITE_WALLET_PRIVATE_KEY] : ["0x0000000000000000000000000000000000000000000000000000000000000001"],
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : ["0x0000000000000000000000000000000000000000000000000000000000000001"],
       chainId: 84532,
     },
   },
